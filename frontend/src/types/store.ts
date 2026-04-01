@@ -20,3 +20,10 @@ export interface authState {
   fetchMe: () => Promise<void>;
   refreshToken: () => Promise<void>;
 }
+
+export interface themeState {
+  isDark: boolean;
+
+  toggleTheme: () => void; //hàm này xử lí theme khi nhấn nút
+  setTheme: (dark: boolean) => void; // hàm này thì để xử lí thẳng state isDark
+}

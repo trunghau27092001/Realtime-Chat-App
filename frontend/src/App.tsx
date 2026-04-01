@@ -4,8 +4,17 @@ import SignUpPage from "./pages/SignUpPage";
 import ChatAppPage from "./pages/ChatAppPage";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { useThemeStore } from "./store/useThemeStore";
+import { useEffect } from "react";
 
 function App() {
+  const { isDark } = useThemeStore();
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else document.documentElement.classList.remove("dark");
+  }, [isDark]);
   return (
     <>
       <Toaster richColors />
