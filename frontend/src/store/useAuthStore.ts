@@ -4,6 +4,7 @@ import { authService } from "@/services/authService";
 import type { authState } from "@/types/store";
 import type { AxiosError } from "axios";
 import { persist } from "zustand/middleware";
+import { useChatStore } from "./useChatStore";
 
 export const useAuthStore = create<authState>()(
   persist(
@@ -18,6 +19,7 @@ export const useAuthStore = create<authState>()(
       clearState: () => {
         set({ accessToken: null, user: null, isLoading: true });
         localStorage.clear();
+        useChatStore.getState().reset();
       },
 
       signUp: async (username, password, email, firstName, lastName) => {
@@ -50,12 +52,16 @@ export const useAuthStore = create<authState>()(
           set({ isLoading: true });
 
           localStorage.clear();
+          useChatStore.getState().reset();
+
           const { accessToken } = await authService.signIn(username, password);
           get().setAccessToken(accessToken);
 
           toast.success("Đăng nhập thành công");
 
           await get().fetchMe();
+
+          useChatStore.getState().fetchConversations();
           return true;
         } catch (error) {
           const err = error as AxiosError;
@@ -73,7 +79,7 @@ export const useAuthStore = create<authState>()(
         try {
           get().clearState();
           await authService.signOut();
-          toast.success("Bạn đã đăng xuất");
+          toast.success("Bạn đã đăng xuất thành công");
         } catch (error) {
           const err = error as AxiosError;
 
